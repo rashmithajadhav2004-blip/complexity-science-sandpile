@@ -1,0 +1,175 @@
+\documentclass[12pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{array}
+
+\setstretch{1.15}
+\graphicspath{{sandpile_outputs/figures/}}
+
+\title{\textbf{Self-Organized Criticality in a 2D Sandpile Model:\\
+A Complexity Science Study of Noise, Avalanches, and Connectivity}}
+\author{Rashmitha Gugulothu \\ 2022CH72213}
+\date{April 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Complex systems consist of many interacting components whose collective behavior cannot be inferred from individual parts alone. The 2D sandpile model is a classic example of self-organized criticality in which local interactions produce avalanche-like cascades of many sizes. In this project, complexity science is applied to a sandpile system to study how random driving noise, toppling avalanches, and neighborhood connectivity shape the global dynamics. A Python simulation is developed for both 4-neighbor and 8-neighbor connectivity. The avalanche size-frequency distribution is analyzed and compared across connectivity settings. The results are presented in manuscript form and support the interpretation of the sandpile as a self-organized critical system.
+\end{abstract}
+
+\section{Introduction}
+Complexity science studies systems made of many interacting units whose collective behavior is nonlinear, emergent, and often surprising. Examples include ecosystems, traffic flow, earthquakes, financial markets, neural networks, and granular media. A key feature of many complex systems is that small local perturbations can trigger large global responses.
+
+The 2D sandpile model is one of the simplest and most important models in complexity science. It captures the idea that adding a small amount of input to a system can sometimes cause a chain reaction or avalanche. Because the model naturally evolves into a critical state without careful external tuning, it is widely used to illustrate self-organized criticality (SOC).
+
+The aim of this project is to study the sandpile as a complex system, describe its noise, avalanche, and connectivity structure, simulate its dynamics computationally, analyze avalanche size distributions, and comment on its critical state.
+
+\section{Why the Sandpile Model Is a Good Candidate for Complexity Science}
+The sandpile model is a strong candidate for complexity science because it has the essential ingredients of a complex system:
+\begin{itemize}
+    \item many interacting components on a lattice,
+    \item local rules that create global behavior,
+    \item nonlinear cascade dynamics,
+    \item broad avalanche statistics,
+    \item emergent critical behavior without external fine tuning.
+\end{itemize}
+
+The model is simple enough to simulate and analyze, yet rich enough to demonstrate how complexity emerges from local interactions.
+
+\section{System Description}
+The system is a two-dimensional square lattice of cells. Each cell stores an integer number of sand grains. Grains are added one by one at randomly chosen sites. When a cell exceeds the stability threshold, it topples and distributes grains to its neighbors.
+
+Three ideas are central to the analysis.
+
+\subsection{Noise}
+Noise is represented by the random addition of grains to random lattice sites. This is the external drive that perturbs the system continuously.
+
+\subsection{Avalanche}
+An avalanche is the chain reaction of topplings triggered by one grain addition. The avalanche size is defined here as the total number of topplings during the relaxation process following a single grain addition.
+
+\subsection{Connectivity}
+Connectivity is the number of neighbors that receive grains during a toppling event. In this study, two connectivity choices are used:
+\begin{itemize}
+    \item 4-neighbor connectivity: up, down, left, right,
+    \item 8-neighbor connectivity: the four nearest neighbors plus diagonals.
+\end{itemize}
+
+Higher connectivity means that each toppling sends grains to more cells, changing the spread of instability across the lattice.
+
+\section{Simulation Method}
+The model is implemented in Python. The simulation uses open boundaries so that grains can leave the system at the edges.
+
+For each connectivity choice, the algorithm proceeds as follows:
+\begin{enumerate}
+    \item Start with an empty lattice.
+    \item Add one grain to a randomly selected cell.
+    \item If any cell reaches or exceeds the threshold, topple it.
+    \item Transfer one grain to each neighbor during a toppling event.
+    \item Continue until the system becomes stable.
+    \item Record the avalanche size.
+\end{enumerate}
+
+To reduce transient effects, the initial portion of the simulation is discarded as burn-in. Several independent runs are combined to improve the statistics.
+
+\section{Simulation Parameters}
+The following parameters were used in the executed simulation:
+\begin{itemize}
+    \item lattice size: $48 \times 48$,
+    \item total steps per run: 12000,
+    \item burn-in steps: 2000,
+    \item number of independent runs: 2,
+    \item connectivity settings: 4-neighbor and 8-neighbor,
+    \item random seed base: 7.
+\end{itemize}
+
+\section{Results}
+The simulation outputs two main figures and a summary table. The first figure shows the avalanche size-frequency distribution on logarithmic axes. The second figure compares the mean avalanche size for the two connectivity settings. The summary table reports key statistics from the simulation.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{avalanche_distribution.png}
+    \caption{Frequency distribution of avalanche sizes for 4-neighbor and 8-neighbor connectivity. The log-log representation is used to inspect broad, scale-invariant behavior.}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{connectivity_mean_size.png}
+    \caption{Effect of connectivity on the mean avalanche size. Greater connectivity changes the spread of instability across the lattice and influences the cascade statistics.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Summary statistics generated by the Python simulation.}
+    \label{tab:summary}
+    \begin{tabular}{rrrrrrrr}
+    \toprule
+    Connectivity & Events & Nonzero & Nonzero fraction & Mean size & Median size & Max size & Tail slope \\
+    \midrule
+    4 & 20000 & 7327 & 0.3664 & 170.115 & 14.000 & 6248 & -0.745 \\
+    8 & 20000 & 1253 & 0.0627 & 83.334 & 4.000 & 2445 & -0.482 \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Interpretation of the Distribution}
+The avalanche distribution is broad: small avalanches occur frequently, while large avalanches are rarer. This is the key statistical signature of self-organized critical behavior. The log-log tail is used to inspect whether the distribution is approximately scale free over an intermediate range.
+
+\subsection{Relation Between Avalanches and Connectivity}
+Connectivity controls how strongly a topple can spread instability to nearby sites. In the 8-neighbor system, each toppling influences more cells than in the 4-neighbor system. The results show that connectivity changes the avalanche statistics and the spread of cascade sizes. The 4-neighbor model produced a higher fraction of nonzero avalanches and a larger mean avalanche size in this simulation run, while the 8-neighbor model showed a lower frequency of nonzero avalanches but still generated a broad range of avalanche sizes. This difference reflects how the local redistribution rule changes the global dynamics.
+
+\section{Discussion}
+The simulation shows how a simple local rule can create complex global dynamics. Random grain addition acts as noise, local toppling events act as avalanches, and the neighborhood structure determines connectivity. The interaction of these three ingredients produces a system with highly variable event sizes.
+
+The appearance of large cascades and a broad size distribution is consistent with critical-like behavior. The fitted tail slopes from the log-log distributions are negative, indicating that larger avalanches are progressively less frequent. Although the slope estimate is only an approximate characterization of the tail, the overall pattern is compatible with the qualitative behavior expected in self-organized critical systems.
+
+\section{Self-Organized Critical State}
+Self-organized criticality refers to the tendency of a system to evolve toward a critical state without precise external tuning. At this state, disturbances can produce cascades spanning many scales.
+
+The sandpile model is a canonical SOC system because it naturally develops a balance between driving and dissipation. In the present study, the appearance of a broad avalanche distribution and the sensitivity to connectivity are consistent with a self-organized critical state.
+
+\section{Conclusion}
+A 2D sandpile model was used as a simple but powerful example of complexity science. The project demonstrated how noise, avalanche formation, and connectivity can be represented computationally and analyzed quantitatively. The simulation framework produces avalanche-size statistics and a direct comparison between 4-neighbor and 8-neighbor connectivity. The model is well suited for illustrating self-organized criticality in the form of a journal-style manuscript.
+
+\section{Acknowledgements}
+The author acknowledges the use of online resources and AI assistance for conceptual development, code drafting, and manuscript preparation. The final report was assembled and checked by the author for submission.
+
+\section{Prompts Used}
+The following prompts were used during the preparation of this project:
+\begin{itemize}
+    \item Explain how the 2D sandpile model can be used to study self-organized criticality.
+    \item Generate Python code for a 2D sandpile simulation with avalanche tracking.
+    \item Compare 4-neighbor and 8-neighbor connectivity in a sandpile model.
+    \item Draft a journal-style LaTeX manuscript for a complexity science project.
+    \item Create a results section with avalanche distribution and connectivity analysis.
+\end{itemize}
+
+\section{Code and Data Availability}
+The simulation code, generated figures, and summary data are included in the project repository submitted with this report.
+
+\begin{thebibliography}{9}
+
+\bibitem{bak1987}
+P. Bak, C. Tang, and K. Wiesenfeld,
+``Self-organized criticality: An explanation of 1/f noise,''
+\textit{Physical Review Letters}, 59(4), 381--384 (1987).
+
+\bibitem{dhar1990}
+D. Dhar,
+``Self-organized critical state of sandpile automaton models,''
+\textit{Physical Review Letters}, 64(14), 1613--1616 (1990).
+
+\end{thebibliography}
+
+\end{document}
